@@ -1,0 +1,24 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Anaphore
+  </h1>
+
+  <div *ngIf="applicationState == 'entry'">
+    <app-user-input
+      [defaultName]=""
+      [communicationSocket]="communicationSocket"
+      (nameSubmitted)="goToWaitingRoom()">
+    </app-user-input>
+  </div>
+
+  <div *ngIf="applicationState == 'waiting'">
+    <app-user-list
+    [userList]="waitingUserList"
+    [communicationSocket]="communicationSocket">
+  </app-user-list>
+  </div>
+  
+
+</div>
+

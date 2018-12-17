@@ -1,0 +1,14 @@
+{
+  "name": "anaphore-server",
+  "version": "0.0.0",
+  "description": "multiplayer board game",
+  "dependencies": {
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0",
+    "lowdb": "^1.0.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/rx": "^4.1.1"
+  }
+}
