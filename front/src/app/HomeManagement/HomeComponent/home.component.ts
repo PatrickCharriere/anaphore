@@ -17,26 +17,13 @@ export class HomeComponent {
   ngOnInit() {
 
     this.communicationSocket = this.websocket.connect();
-    this.communicationSocket.subscribe((response: any): any => {
-
-      try {
-        
-        if(response.message === 'formattedUserList') {
-          this.waitingUserList = response.formattedUserList;
-        }
-
-      }
-      catch (error) {
-
-      }
-      //return response;
-
-    })
     
   }
 
   goToWaitingRoom() {
+
     this.applicationState = "waiting";
+    
   }
 
 }

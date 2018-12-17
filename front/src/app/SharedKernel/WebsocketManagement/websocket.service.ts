@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 import * as Rx from 'rxjs';
-import { methodNames } from './method_names';
+import { SocketChannel } from '../../../../../shared/SocketChannel';
+import { UserList } from '../../../../../shared/users';
 //import { environment } from '../environments/environment';
 
 @Injectable()
@@ -10,29 +11,33 @@ export class WebsocketService {
 
   private socket;
 
-  constructor() { }
+  constructor() {
+    //this.socket = io(environment.ws_url);
+    this.socket = io("http://localhost:3000")
+  }
 
-
+  waitingRoom(): Observable<UserList> {
+    return this.createInputChannel(SocketChannel.ListWaitingRoomReply);
+  }
   
-  private subscribe(channel: methodNames) {
-    
+  private createInputChannel<T>(channel: SocketChannel): Observable<T> {
+
+    let observable = new Observable((observer: Subscriber<T>) => {
+      this.socket.on(channel, (data) => {
+        observer.next(data);
+      })
+      return () => {
+        this.socket.disconnect();
+      }
+    });
+
+    return observable;
+
   }
   
   connect(): Rx.Subject<MessageEvent> {
-    //this.socket = io(environment.ws_url);
-    this.socket = io("http://localhost:3000");
-
-    // Collect messages from server
-    let observable = new Observable(observer => {
-        this.socket.on('message', (data) => {
-          observer.next(data);
-        })
-        return () => {
-          this.socket.disconnect();
-        }
-    });
     
-    // Emit data to server
+    // Data emitter to server
     let observer = {
         next: (data) => {
           console.log(data);
@@ -40,7 +45,7 @@ export class WebsocketService {
         },
     };
 
-    return Rx.Subject.create(observer, observable);
+    return Rx.Subject.create(observer);
   }
 
 }

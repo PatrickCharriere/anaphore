@@ -3,3 +3,5 @@ export interface User {
     name: string,
     currentScore: number,
 }
+
+export type UserList = User[];

@@ -1,3 +1,4 @@
+import { SocketChannel } from './../../../../../shared/SocketChannel';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { WebsocketService } from '../../SharedKernel/WebsocketManagement/websocket.service';
@@ -19,7 +20,7 @@ export class UserInputComponent {
 
   sendMessage() {
     this.communicationSocket.next({
-      command: 'createPlayer',
+      command: SocketChannel.CreatePlayer,
       value: {name: this.playername.value}
     });
     this.nameSubmitted.emit(true);
