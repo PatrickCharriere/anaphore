@@ -3,7 +3,7 @@ import * as io from 'socket.io-client';
 import { Observable, Subscriber } from 'rxjs';
 import * as Rx from 'rxjs';
 import { SocketChannel } from './SocketChannel';
-import { UserList } from './users';
+import { UserList, User } from '../users';
 //import { environment } from '../environments/environment';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class WebsocketService {
     this.socket = io("http://localhost:3000")
   }
 
-  playerCreation(): Observable<UserList> {
+  playerCreation(): Observable<User> {
     return this.createInputChannel(SocketChannel.PlayerCreated);
   }
 

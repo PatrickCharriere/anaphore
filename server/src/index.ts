@@ -1,9 +1,10 @@
-import { SocketChannel } from './SocketChannel';
-import { User, UserStatus, UserList } from './users';
+
+import { User, UserStatus } from './users';
 import * as express from 'express';
 import * as http from 'http';
 import * as socket_io from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
+import { SocketChannel } from './SocketChannel';
 
 const app = express()
 const httpServer = new http.Server(app as any)
@@ -38,6 +39,8 @@ io.on('connection', (socket) => {
 				
 			);
 
+			broadcastUserList();
+
 		} catch(error) {
 
 		}
@@ -71,6 +74,14 @@ io.on('connection', (socket) => {
 
 });
 
+function broadcastUserList() {
+	
+	io.emit(
+		SocketChannel.ListWaitingRoomReply,
+		userSockets.map(userSocket => userSocket.user),
+	);
+
+}
 
 httpServer.listen(3000, function(){
 

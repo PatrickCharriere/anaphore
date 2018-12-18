@@ -28,10 +28,14 @@ export class UserListComponent implements OnInit {
     this.subscriber = this.websocket.waitingRoom().subscribe((data) => {
 
       this.userList = data;
-      
-      this.subscriber.unsubscribe();
     
     })
+
+  }
+
+  ngOnDestroy() {
+
+    this.subscriber.unsubscribe();
 
   }
 

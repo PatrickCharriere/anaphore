@@ -1,7 +1,8 @@
-import { WebsocketService } from './../../SharedKernel/WebsocketManagement/websocket.service';
+import { WebsocketService } from '../../SharedKernel/WebsocketManagement/websocket.service';
 import { SocketChannel } from '../../SharedKernel/WebsocketManagement/SocketChannel';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { UserService } from 'src/app/SharedKernel/user.service';
 
 @Component({
   selector: 'app-user-input',
@@ -16,7 +17,8 @@ export class UserInputComponent {
   @Input('defaultName') defaultName: string;
   @Output() nameSubmitted = new EventEmitter<boolean>();
 
-  constructor(private websocket: WebsocketService) {}
+  constructor(private websocket: WebsocketService,
+    private user: UserService) {}
 
   ngOnInit() {
     this.communicationSocket = this.websocket.connect();
@@ -33,10 +35,12 @@ export class UserInputComponent {
 
     });
 
-    this.subscriber = this.websocket.playerCreation().subscribe((data) => {
+    this.subscriber = this.websocket.playerCreation().subscribe((user) => {
      
       this.subscriber.unsubscribe();
     
+      this.user.set(user);
+
       this.nameSubmitted.emit(true);
     
     });
