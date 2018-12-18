@@ -7,15 +7,13 @@
   <div *ngIf="applicationState == 'entry'">
     <app-user-input
       [defaultName]=""
-      [communicationSocket]="communicationSocket"
       (nameSubmitted)="goToWaitingRoom()">
     </app-user-input>
   </div>
 
   <div *ngIf="applicationState == 'waiting'">
     <app-user-list
-    [userList]="waitingUserList"
-    [communicationSocket]="communicationSocket">
+    [userList]="waitingUserList">
   </app-user-list>
   </div>
   

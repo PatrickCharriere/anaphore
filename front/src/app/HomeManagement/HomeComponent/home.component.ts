@@ -9,16 +9,12 @@ import { User } from '../../SharedKernel/user'
   providers: [WebsocketService]
 })
 export class HomeComponent {
-  communicationSocket;
+  
   applicationState = "entry";
   waitingUserList: User[] = [];
-  constructor(private websocket: WebsocketService){ }
+  constructor(){ }
 
-  ngOnInit() {
-
-    this.communicationSocket = this.websocket.connect();
-    
-  }
+  ngOnInit() {}
 
   goToWaitingRoom() {
 

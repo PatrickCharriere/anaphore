@@ -1,6 +1,9 @@
+import { UserList } from './../../SharedKernel/user';
+import { WebsocketService } from './../../SharedKernel/WebsocketManagement/websocket.service';
 import { SocketChannel } from '../../SharedKernel/WebsocketManagement/SocketChannel';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-input',
@@ -8,21 +11,49 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./user.input.component.scss']
 })
 export class UserInputComponent {
+
+  private communicationSocket;
   playername = new FormControl('');
+  private subscriber/*: Observable<UserList>*/;
   @Input('defaultName') defaultName: string;
-  @Input('communicationSocket') communicationSocket;
   @Output() nameSubmitted = new EventEmitter<boolean>();
 
-  constructor(){ }
+  constructor(private websocket: WebsocketService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.communicationSocket = this.websocket.connect();
+  }
 
   sendMessage() {
+    
     this.communicationSocket.next({
+
       command: SocketChannel.CreatePlayer,
-      value: {name: this.playername.value}
+      value: {
+        name: this.playername.value
+      }
+
     });
-    this.nameSubmitted.emit(true);
+
+    console.log('subscribe');
+    
+    this.subscriber = this.websocket.playerCreation().subscribe((data) => {
+     
+      console.log('unsubscribe');
+      this.subscriber.unsubscribe();
+
+      console.log("playerCreation", data);
+      
+      //this.nameSubmitted.emit(true);
+    
+    })
+  
+  }
+
+  ngOnDestroy() {
+
+    this.subscriber.unsubscribe();
+
   }
 
 }

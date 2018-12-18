@@ -16,6 +16,10 @@ export class WebsocketService {
     this.socket = io("http://localhost:3000")
   }
 
+  playerCreation(): Observable<UserList> {
+    return this.createInputChannel(SocketChannel.PlayerCreated);
+  }
+
   waitingRoom(): Observable<UserList> {
     return this.createInputChannel(SocketChannel.ListWaitingRoomReply);
   }
@@ -26,9 +30,9 @@ export class WebsocketService {
       this.socket.on(channel, (data) => {
         observer.next(data);
       })
-      return () => {
+      /*return () => {
         this.socket.disconnect();
-      }
+      }*/
     });
 
     return observable;

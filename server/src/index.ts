@@ -26,6 +26,8 @@ io.on('connection', (socket) => {
 
 	socket.on(SocketChannel.CreatePlayer, (content) => {
 
+		console.log(SocketChannel.CreatePlayer, content);
+
 		try {
 
 			const player = JSON.parse(content);
@@ -41,11 +43,8 @@ io.on('connection', (socket) => {
 
 			socket.emit(
 		
-				'message',
-				{
-					message: "userCreated",
-					userCreated: user,
-				},
+				SocketChannel.PlayerCreated,
+				user,
 				
 			);
 
