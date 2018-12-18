@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User } from '../../SharedKernel/user';
+import { UserList } from '../../SharedKernel/user';
 import { WebsocketService } from 'src/app/SharedKernel/WebsocketManagement/websocket.service';
 import { SocketChannel } from 'src/app/SharedKernel/WebsocketManagement/SocketChannel';
 
@@ -9,11 +9,9 @@ import { SocketChannel } from 'src/app/SharedKernel/WebsocketManagement/SocketCh
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
-  _userList: User[]
-  @Input('userList')
-  set userList(userList: User[]) {
-    this._userList = userList;
-  }
+
+  userList: UserList = [];
+  private subscriber;
 
   private communicationSocket;
 
@@ -26,6 +24,14 @@ export class UserListComponent implements OnInit {
     this.communicationSocket.next({
       command: SocketChannel.ListWaitingRoomRequest,
     });
+
+    this.subscriber = this.websocket.waitingRoom().subscribe((data) => {
+
+      this.userList = data;
+      
+      this.subscriber.unsubscribe();
+    
+    })
 
   }
 

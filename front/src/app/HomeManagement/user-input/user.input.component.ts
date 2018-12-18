@@ -12,7 +12,7 @@ export class UserInputComponent {
 
   private communicationSocket;
   playername = new FormControl('');
-  private subscriber/*: Observable<UserList>*/;
+  private subscriber;
   @Input('defaultName') defaultName: string;
   @Output() nameSubmitted = new EventEmitter<boolean>();
 
@@ -39,7 +39,7 @@ export class UserInputComponent {
     
       this.nameSubmitted.emit(true);
     
-    })
+    });
   
   }
 

@@ -56,9 +56,7 @@ io.on('connection', (socket) => {
 
 	socket.on(SocketChannel.ListWaitingRoomRequest, (content) => {
 
-		console.log('listWaitingRoom content: ', content)
-
-		const formattedUserList = (db.get('users').filter({ status: "waiting" }).value() as UserList).map(user => {
+		const formattedUserList = (db.get('users').filter({ status: UserStatus.Waiting }).value() as UserList).map(user => {
 			return {
 				id: user.id,
 				name: user.name,
