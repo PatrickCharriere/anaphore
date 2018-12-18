@@ -20,6 +20,8 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
+let userSockets = [];
+
 io.on('connection', (socket) => {
 
 	console.log('user connected');
@@ -34,12 +36,14 @@ io.on('connection', (socket) => {
 			const playername = player.name;
 			const user: User = {id: uuidv4(), name: playername, status: UserStatus.Waiting, currentScore: 0};
 
-			db.get('users')
+			userSockets.push({user:user, socket:socket});
+			
+			/*db.get('users')
 				.push(user)
 				.write()
 	
 			db.update('count', n => n + 1)
-				.write()
+				.write()*/
 
 			socket.emit(
 		
@@ -56,24 +60,34 @@ io.on('connection', (socket) => {
 
 	socket.on(SocketChannel.ListWaitingRoomRequest, (content) => {
 
-		const formattedUserList = (db.get('users').filter({ status: UserStatus.Waiting }).value() as UserList).map(user => {
+		/*const formattedUserList = (db.get('users').filter({ status: UserStatus.Waiting }).value() as UserList).map(user => {
 			return {
 				id: user.id,
 				name: user.name,
 				currentScore: user.currentScore,
 			}
-		});
+		});*/
 
 		socket.emit(
 			SocketChannel.ListWaitingRoomReply,
-			formattedUserList,
+			userSockets.map(userSocket => userSocket.user),
+		);
+
+	});
+
+	socket.on(SocketChannel.StartGame, (content) => {
+
+		console.log(SocketChannel.StartGame, content);
+		
+		socket.emit(
+			SocketChannel.ListWaitingRoomReply
 		);
 
 	});
 
 	socket.on('disconnect', function(){
 
-		console.log('user disconnected');
+		userSockets = userSockets.filter(userSocket => (userSocket.socket.id != socket.id))
 
 	});
 
