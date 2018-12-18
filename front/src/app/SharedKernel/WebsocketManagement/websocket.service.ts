@@ -23,6 +23,10 @@ export class WebsocketService {
   waitingRoom(): Observable<UserList> {
     return this.createInputChannel(SocketChannel.ListWaitingRoomReply);
   }
+
+  gameProposal(): Observable<User> {
+    return this.createInputChannel(SocketChannel.GameProposed);
+  }
   
   private createInputChannel<T>(channel: SocketChannel): Observable<T> {
 

@@ -14,7 +14,8 @@ export class UserListComponent implements OnInit {
 
   _user: User;
   userList: UserList = [];
-  private subscriber;
+  private waitingRoomSubscription;
+  private gameProposalSubscription;
   @Output() partyStarted = new EventEmitter<User>();
 
   private communicationSocket;
@@ -28,17 +29,21 @@ export class UserListComponent implements OnInit {
 
     this.user.get().subscribe(user => {
       
-      this._user = user;
+      this._user = user
 
-      this.subscriber = this.websocket.waitingRoom().subscribe((userList) => {
+      this.waitingRoomSubscription = this.websocket.waitingRoom().subscribe((userList) => {
         this.userList = userList.filter(user => (user.id != this._user.id));
       })
 
-    });
+    })
 
     this.communicationSocket.next({
       command: SocketChannel.ListWaitingRoomRequest,
-    });
+    })
+
+    this.gameProposalSubscription = this.websocket.gameProposal().subscribe((user) => {
+      console.log("GAME PROPOSAL", user)
+    })
 
   }
 
@@ -49,15 +54,17 @@ export class UserListComponent implements OnInit {
       value: {
         proposer: this._user,
         opponent: user,
-      }
-    });
-    this.partyStarted.emit(user);
+      },
+    })
+
+    this.partyStarted.emit(user)
 
   }
 
   ngOnDestroy() {
 
-    this.subscriber.unsubscribe();
+    this.waitingRoomSubscription.unsubscribe()
+    this.gameProposalSubscription.unsubscribe()
 
   }
 

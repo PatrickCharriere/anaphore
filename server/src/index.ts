@@ -10,10 +10,6 @@ const app = express()
 const httpServer = new http.Server(app as any)
 const io = socket_io(httpServer)
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
-
 let userSockets = [];
 
 io.on('connection', (socket) => {
@@ -54,9 +50,22 @@ io.on('connection', (socket) => {
 
 	});
 
-	socket.on(SocketChannel.ProposeGame, (content) => {
+	socket.on(SocketChannel.ProposeGame, (proposal) => {
 
-		console.log(SocketChannel.ProposeGame, content);
+		try {
+			proposal = JSON.parse(proposal);
+		} catch(e) {}
+
+		try {
+			(userSockets.filter(userSocket => (userSocket.user.id == proposal.opponent.id))[0])
+			.socket
+			.emit(
+			
+				SocketChannel.GameProposed,
+				proposal.proposer,
+				
+			);
+		} catch(e) {}
 
 	});
 
