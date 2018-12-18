@@ -18,9 +18,13 @@ export class HomeComponent {
   ngOnInit() {}
 
   goToWaitingRoom() {
-
     this.applicationState = "waiting";
-    
+  }
+
+  goToGame() {
+
+    this.applicationState = "partyInProgress";
+
   }
 
 }

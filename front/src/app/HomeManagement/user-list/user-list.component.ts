@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UserList } from '../../SharedKernel/user';
 import { WebsocketService } from 'src/app/SharedKernel/WebsocketManagement/websocket.service';
 import { SocketChannel } from 'src/app/SharedKernel/WebsocketManagement/SocketChannel';
@@ -15,6 +15,7 @@ export class UserListComponent implements OnInit {
   _user: User;
   userList: UserList = [];
   private subscriber;
+  @Output() partyStarted = new EventEmitter<User>();
 
   private communicationSocket;
 
@@ -39,7 +40,18 @@ export class UserListComponent implements OnInit {
       command: SocketChannel.ListWaitingRoomRequest,
     });
 
-    
+  }
+
+  userSelected(user: User) {
+
+    this.communicationSocket.next({
+      command: SocketChannel.ProposeGame,
+      value: {
+        proposer: this._user,
+        opponent: user,
+      }
+    });
+    this.partyStarted.emit(user);
 
   }
 
@@ -47,13 +59,6 @@ export class UserListComponent implements OnInit {
 
     this.subscriber.unsubscribe();
 
-  }
-
-  sendMessage() {
-    /*this.communicationSocket.next({
-      command: 'startGame',
-    });
-    this.playerSelected.emit(true);*/
   }
 
 }

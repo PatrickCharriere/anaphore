@@ -1,6 +1,6 @@
 <div>
   <span *ngIf="userList.length == 0">Pas de joueur en attente.</span>
     <span *ngFor="let user of userList">
-      <button>{{user.name}}</button>
+      <button (click)="userSelected(user)">{{user.name}}</button>
     </span>
 </div>

@@ -18,8 +18,6 @@ let userSockets = [];
 
 io.on('connection', (socket) => {
 
-	console.log('user connected');
-
 	socket.on(SocketChannel.CreatePlayer, (content) => {
 
 		console.log(SocketChannel.CreatePlayer, content);
@@ -47,7 +45,7 @@ io.on('connection', (socket) => {
 
 	})
 
-	socket.on(SocketChannel.ListWaitingRoomRequest, (content) => {
+	socket.on(SocketChannel.ListWaitingRoomRequest, () => {
 
 		socket.emit(
 			SocketChannel.ListWaitingRoomReply,
@@ -56,13 +54,9 @@ io.on('connection', (socket) => {
 
 	});
 
-	socket.on(SocketChannel.StartGame, (content) => {
+	socket.on(SocketChannel.ProposeGame, (content) => {
 
-		console.log(SocketChannel.StartGame, content);
-		
-		socket.emit(
-			SocketChannel.ListWaitingRoomReply
-		);
+		console.log(SocketChannel.ProposeGame, content);
 
 	});
 

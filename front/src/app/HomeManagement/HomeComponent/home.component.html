@@ -12,10 +12,14 @@
   </div>
 
   <div *ngIf="applicationState == 'waiting'">
-    <app-user-list>
-  </app-user-list>
+    <app-user-list
+      (partyStarted)="goToGame()">
+    </app-user-list>
   </div>
-  
+
+  <div *ngIf="applicationState == 'partyInProgress'">
+    GAME
+  </div>
 
 </div>
 

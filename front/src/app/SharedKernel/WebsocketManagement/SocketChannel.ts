@@ -4,5 +4,5 @@ export enum SocketChannel {
     PlayerCreated = "PlayerCreated",
     ListWaitingRoomRequest = "ListWaitingRoomRequest",
     ListWaitingRoomReply = "ListWaitingRoomReply",
-    StartGame = "StartGame",
+    ProposeGame = "ProposeGame",
 }
