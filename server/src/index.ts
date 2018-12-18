@@ -1,5 +1,5 @@
-import { User, UserStatus, UserList } from 'anaphore-shared/users';
-import { SocketChannel } from 'anaphore-shared/SocketChannel';
+import { SocketChannel } from './SocketChannel';
+import { User, UserStatus, UserList } from './users';
 import * as express from 'express';
 import * as http from 'http';
 import * as socket_io from 'socket.io';

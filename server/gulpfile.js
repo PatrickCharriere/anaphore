@@ -18,7 +18,7 @@ gulp.task('assets', function () {
 
 gulp.task('build', gulp.series('scripts', 'assets'));
 
-gulp.task('watch', gulp.series('scripts', function () {
+gulp.task('watch', gulp.series('scripts', 'assets', function () {
 	gulp.watch('./src/**/*.ts', gulp.series('build'));
 }));
 

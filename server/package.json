@@ -6,8 +6,7 @@
     "express": "^4.16.4",
     "socket.io": "^2.2.0",
     "lowdb": "^1.0.0",
-    "uuid": "^3.3.2",
-    "anaphore-shared": "../shared"
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",

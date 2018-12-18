@@ -1,7 +1,6 @@
-import { SocketChannel } from './../../../../../shared/SocketChannel';
+import { SocketChannel } from '../../SharedKernel/WebsocketManagement/SocketChannel';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { WebsocketService } from '../../SharedKernel/WebsocketManagement/websocket.service';
 
 @Component({
   selector: 'app-user-input',

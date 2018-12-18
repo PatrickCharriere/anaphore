@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { Observable, Subscriber } from 'rxjs';
 import * as Rx from 'rxjs';
-import { SocketChannel } from '../../../../../shared/SocketChannel';
-import { UserList } from '../../../../../shared/users';
+import { SocketChannel } from './SocketChannel';
+import { UserList } from './users';
 //import { environment } from '../environments/environment';
 
 @Injectable()
