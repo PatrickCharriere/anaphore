@@ -69,6 +69,7 @@ io.on('connection', (socket) => {
 	socket.on('disconnect', function(){
 
 		userSockets = userSockets.filter(userSocket => (userSocket.socket.id != socket.id))
+		broadcastUserList();
 
 	});
 

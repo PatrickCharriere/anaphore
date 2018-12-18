@@ -27,12 +27,11 @@ export class WebsocketService {
   private createInputChannel<T>(channel: SocketChannel): Observable<T> {
 
     let observable = new Observable((observer: Subscriber<T>) => {
+
       this.socket.on(channel, (data) => {
         observer.next(data);
       })
-      /*return () => {
-        this.socket.disconnect();
-      }*/
+      
     });
 
     return observable;
@@ -44,7 +43,6 @@ export class WebsocketService {
     // Data emitter to server
     let observer = {
         next: (data) => {
-          console.log(data);
           return this.socket.emit(data.command, JSON.stringify(data.value));
         },
     };
