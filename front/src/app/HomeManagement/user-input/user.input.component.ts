@@ -1,9 +1,7 @@
-import { UserList } from './../../SharedKernel/user';
 import { WebsocketService } from './../../SharedKernel/WebsocketManagement/websocket.service';
 import { SocketChannel } from '../../SharedKernel/WebsocketManagement/SocketChannel';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-input',
@@ -35,16 +33,11 @@ export class UserInputComponent {
 
     });
 
-    console.log('subscribe');
-    
     this.subscriber = this.websocket.playerCreation().subscribe((data) => {
      
-      console.log('unsubscribe');
       this.subscriber.unsubscribe();
-
-      console.log("playerCreation", data);
-      
-      //this.nameSubmitted.emit(true);
+    
+      this.nameSubmitted.emit(true);
     
     })
   
