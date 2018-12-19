@@ -1,6 +1,11 @@
 import { User } from './users';
 
-export interface proposal {
+export interface Proposal {
     proposer: User,
     opponent: User,
+}
+
+export interface ProposalResponse {
+    proposal: Proposal,
+    accepted: boolean,
 }

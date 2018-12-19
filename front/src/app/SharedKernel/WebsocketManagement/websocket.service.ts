@@ -4,6 +4,7 @@ import { Observable, Subscriber } from 'rxjs';
 import * as Rx from 'rxjs';
 import { SocketChannel } from './SocketChannel';
 import { UserList, User } from '../users';
+import { Proposal, ProposalResponse } from '../proposal';
 //import { environment } from '../environments/environment';
 
 @Injectable()
@@ -24,8 +25,12 @@ export class WebsocketService {
     return this.createInputChannel(SocketChannel.ListWaitingRoomReply);
   }
 
-  gameProposal(): Observable<User> {
+  gameProposal(): Observable<Proposal> {
     return this.createInputChannel(SocketChannel.GameProposed);
+  }
+
+  opponentResponse(): Observable<ProposalResponse> {
+    return this.createInputChannel(SocketChannel.GameProposalResponse);
   }
   
   private createInputChannel<T>(channel: SocketChannel): Observable<T> {

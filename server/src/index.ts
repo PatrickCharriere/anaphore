@@ -1,18 +1,18 @@
 
-import { User, UserStatus } from './users';
+import { User, UserStatus, UserSocket } from './users';
 import * as express from 'express';
 import * as http from 'http';
 import * as socket_io from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { SocketChannel } from './SocketChannel';
-import { Proposal } from './Proposal';
+import { Proposal, ProposalResponse } from './Proposal';
 
 const app = express()
 const httpServer = new http.Server(app as any)
 const io = socket_io(httpServer)
 
-let userSockets = [];
-const proposals: Proposal[] = [];
+let userSockets: UserSocket[] = [];
+let proposals: Proposal[] = [];
 
 io.on('connection', (socket) => {
 
@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
 	socket.on(SocketChannel.ProposeGame, (proposal) => {
 
 		try {
-			proposal = JSON.parse(proposal);
+			proposal = JSON.parse(proposal) as Proposal;
 			addToProposalList(proposal);
 		} catch(e) {}
 
@@ -63,10 +63,57 @@ io.on('connection', (socket) => {
 			.emit(
 			
 				SocketChannel.GameProposed,
-				proposal.proposer,
+				proposal,
 				
 			);
 		} catch(e) {}
+
+	});
+
+	socket.on(SocketChannel.GameProposalResponse, (proposalResponse) => {
+		
+		try {
+
+			proposalResponse = JSON.parse(proposalResponse) as ProposalResponse
+			
+		} catch(e) {}
+
+		const proposal = findProposalInList(proposalResponse.proposal)
+
+		if (proposal) {
+			const proposerSocket: socket_io.Socket = getSocketForUser(proposal.proposer)
+			const opponentSocket: socket_io.Socket = getSocketForUser(proposal.opponent)
+			let socketToReplyTo: socket_io.Socket;
+
+			if ((proposerSocket.id == socket.id) && (opponentSocket.id == socket.id)) {
+
+				// Someone else replied to game proposal
+				return
+
+			}
+
+			if (proposerSocket.id == socket.id) {
+				
+				socketToReplyTo = opponentSocket;
+
+			} else if (opponentSocket.id == socket.id) {
+				
+				socketToReplyTo = proposerSocket;
+
+			}
+
+			socketToReplyTo.emit(
+			
+				SocketChannel.GameProposalResponse,
+				proposalResponse,
+				
+			);
+
+			removeProposalFromList(proposal)
+
+			startGame(proposal)
+
+		}
 
 	});
 
@@ -90,15 +137,13 @@ function broadcastUserList() {
 
 function addToProposalList(proposal: Proposal): boolean {
 
-	if(isProposalInList(proposal)) {
+	if(findProposalInList(proposal)) {
 
-		console.log(proposals);
 		return false
 
 	} else {
 
 		proposals.push(proposal)
-		console.log(proposals);
 		return true
 
 	}
@@ -107,7 +152,7 @@ function addToProposalList(proposal: Proposal): boolean {
 
 /**Returns the index where the proposal is in the proposal list
  * else returns -1 */
-function isProposalInList(proposal: Proposal): boolean {
+function findProposalInList(proposal: Proposal): Proposal {
 
 	const isInList = proposals
 	.filter(prop => ((proposal.proposer.id == prop.proposer.id) || (proposal.proposer.id == prop.opponent.id)))
@@ -115,15 +160,40 @@ function isProposalInList(proposal: Proposal): boolean {
 
 	if(isInList.length == 0) {
 
-		return false
+		return null
 
 	} else {
 
-		return true
+		return isInList[0]
 
 	}
 
 	
+
+}
+
+function removeProposalFromList(proposal: Proposal) {
+
+	proposals = proposals
+		.filter(prop => ((proposal.proposer.id != prop.proposer.id) || (proposal.opponent.id != prop.opponent.id)) &&
+			((proposal.opponent.id != prop.proposer.id) || (proposal.proposer.id != prop.opponent.id))
+		)
+
+}
+
+function getSocketForUser(user: User): socket_io.Socket {
+
+	const userSocket = userSockets.filter(userSocket => (userSocket.user.id == user.id))
+
+	if (userSocket.length == 0) {
+		return null;
+	} else {
+		return userSocket[0].socket;
+	}
+
+}
+
+function startGame(proposal: Proposal) {
 
 }
 

@@ -4,7 +4,7 @@ import { WebsocketService } from 'src/app/SharedKernel/WebsocketManagement/webso
 import { SocketChannel } from 'src/app/SharedKernel/WebsocketManagement/SocketChannel';
 import { UserService } from 'src/app/SharedKernel/user.service';
 import { User } from 'src/app/SharedKernel/users';
-import { proposal } from 'src/app/SharedKernel/proposal';
+import { Proposal } from 'src/app/SharedKernel/proposal';
 
 @Component({
   selector: 'app-user-list',
@@ -15,11 +15,11 @@ export class UserListComponent implements OnInit {
 
   _user: User;
   userList: UserList = [];
+  private communicationSocket;
   private waitingRoomSubscription;
   private gameProposalSubscription;
-  @Output() partyStarted = new EventEmitter<User>();
-
-  private communicationSocket;
+  private gameProposalResponseSubscription;
+  @Output() startGame = new EventEmitter<void>();
 
   constructor(private websocket: WebsocketService,
     private user: UserService) {}
@@ -42,15 +42,66 @@ export class UserListComponent implements OnInit {
       command: SocketChannel.ListWaitingRoomRequest,
     })
 
-    this.gameProposalSubscription = this.websocket.gameProposal().subscribe((user) => {
-      console.log("GAME PROPOSAL", user)
+    this.subscribeToGameProposals();
+    this.subscribeToOpponentResponse();
+
+  }
+
+  subscribeToGameProposals() {
+
+    this.gameProposalSubscription = this.websocket.gameProposal().subscribe((proposal) => {
+      
+      this.gameProposalSubscription.unsubscribe()
+      let accepted: boolean = false;
+
+      accepted = confirm(proposal.proposer.name + ' vous propose de jouer, accepter ?')
+
+      this.communicationSocket.next({
+        command: SocketChannel.GameProposalResponse,
+        value: {
+          proposal: proposal,
+          accepted: accepted,
+        },
+      })
+
+      if (accepted) {
+
+        this.startGame.emit();
+
+      } else {
+        
+        this.subscribeToGameProposals();
+
+      }
+
+    })
+
+  }
+
+  subscribeToOpponentResponse() {
+
+    this.gameProposalResponseSubscription = this.websocket.opponentResponse().subscribe((response) => {
+      
+      if (response.accepted) {
+
+        alert(response.proposal.opponent.name + ' a accepté votre demande, la partie commence...');
+        this.startGame.emit();
+
+      } else {
+
+        alert(response.proposal.opponent.name + ' n\'a pas accepté votre demande, trouvez vite un nouvel adversaire');
+
+      }
+
+      
+
     })
 
   }
 
   userSelected(user: User) {
 
-    const proposal: proposal = {
+    const proposal: Proposal = {
       proposer: this._user,
       opponent: user,
     };
@@ -60,14 +111,13 @@ export class UserListComponent implements OnInit {
       value: proposal,
     })
 
-    this.partyStarted.emit(user)
-
   }
 
   ngOnDestroy() {
 
     this.waitingRoomSubscription.unsubscribe()
     this.gameProposalSubscription.unsubscribe()
+    this.gameProposalResponseSubscription.unsubscribe()
 
   }
 
