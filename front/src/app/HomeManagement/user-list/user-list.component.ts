@@ -4,6 +4,7 @@ import { WebsocketService } from 'src/app/SharedKernel/WebsocketManagement/webso
 import { SocketChannel } from 'src/app/SharedKernel/WebsocketManagement/SocketChannel';
 import { UserService } from 'src/app/SharedKernel/user.service';
 import { User } from 'src/app/SharedKernel/users';
+import { proposal } from 'src/app/SharedKernel/proposal';
 
 @Component({
   selector: 'app-user-list',
@@ -49,12 +50,14 @@ export class UserListComponent implements OnInit {
 
   userSelected(user: User) {
 
+    const proposal: proposal = {
+      proposer: this._user,
+      opponent: user,
+    };
+
     this.communicationSocket.next({
       command: SocketChannel.ProposeGame,
-      value: {
-        proposer: this._user,
-        opponent: user,
-      },
+      value: proposal,
     })
 
     this.partyStarted.emit(user)
