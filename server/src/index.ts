@@ -6,6 +6,8 @@ import * as socket_io from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { SocketChannel } from './SocketChannel';
 import { Proposal, ProposalResponse } from './Proposal';
+import { PieceSet, DEFAULT_DRAW, Piece } from './Piece';
+import { Game } from './Game';
 
 const app = express()
 const httpServer = new http.Server(app as any)
@@ -13,6 +15,7 @@ const io = socket_io(httpServer)
 
 let userSockets: UserSocket[] = [];
 let proposals: Proposal[] = [];
+let gamesInProgress: Game[] = [];
 
 io.on('connection', (socket) => {
 
@@ -195,7 +198,39 @@ function getSocketForUser(user: User): socket_io.Socket {
 
 function startGame(proposal: Proposal) {
 
+	const game: Game = {
+		
+		players: [proposal.proposer, proposal.opponent],
+		pieceSet: createDefaultDraw(),
+		gameBoard: [],
+
+	}
+
+	console.log(game)
+	gamesInProgress.push(game)
+
+
 }
+
+function createDefaultDraw(): PieceSet {
+
+	let pieceSet: PieceSet = []
+	
+	for (let i = 0; i < DEFAULT_DRAW.length; i++) {
+
+		for (let j = 0; j < DEFAULT_DRAW[i]; j++) {
+
+			let piece: Piece = {value: i}
+			pieceSet.push(piece)
+		
+		}
+		
+	}
+
+	return pieceSet
+
+}
+ 
 
 httpServer.listen(3000, function(){
 
