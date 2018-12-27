@@ -1,21 +1,19 @@
 
-import { User, UserStatus, UserSocket } from './users';
+import { User, UserStatus } from './User';
 import * as express from 'express';
 import * as http from 'http';
 import * as socket_io from 'socket.io';
-import { v4 as uuidv4 } from 'uuid';
 import { SocketChannel } from './SocketChannel';
 import { Proposal, ProposalResponse } from './Proposal';
-import { PieceSet, DEFAULT_DRAW, Piece } from './Piece';
 import { Game } from './Game';
 
 const app = express()
 const httpServer = new http.Server(app as any)
 const io = socket_io(httpServer)
 
-let userSockets: UserSocket[] = [];
+let users: User[] = [];
 let proposals: Proposal[] = [];
-let gamesInProgress: Game[] = [];
+let games: Game[] = [];
 
 io.on('connection', (socket) => {
 
@@ -23,11 +21,10 @@ io.on('connection', (socket) => {
 
 		try {
 
-			const player = JSON.parse(content);
-			const playername = player.name;
-			const user: User = {id: uuidv4(), name: playername, status: UserStatus.Waiting, currentScore: 0};
+			const player = JSON.parse(content)
+			const user = new User(player.name, socket)
 
-			userSockets.push({user:user, socket:socket});
+			users.push(user);
 
 			socket.emit(
 		
@@ -48,7 +45,10 @@ io.on('connection', (socket) => {
 
 		socket.emit(
 			SocketChannel.ListWaitingRoomReply,
-			userSockets.map(userSocket => userSocket.user),
+			users
+			.filter(user => {
+				return (user.status == UserStatus.Waiting)
+			})
 		);
 
 	});
@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
 		} catch(e) {}
 
 		try {
-			(userSockets.filter(userSocket => (userSocket.user.id == proposal.opponent.id))[0])
+			(users.filter(userSocket => (userSocket.id == proposal.opponent.id))[0])
 			.socket
 			.emit(
 			
@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on(SocketChannel.GameProposalResponse, (proposalResponse) => {
-		
+
 		try {
 
 			proposalResponse = JSON.parse(proposalResponse) as ProposalResponse
@@ -84,8 +84,8 @@ io.on('connection', (socket) => {
 		const proposal = findProposalInList(proposalResponse.proposal)
 
 		if (proposal) {
-			const proposerSocket: socket_io.Socket = getSocketForUser(proposal.proposer)
-			const opponentSocket: socket_io.Socket = getSocketForUser(proposal.opponent)
+			const proposerSocket: socket_io.Socket = getSocketForUser(proposal.proposer.id)
+			const opponentSocket: socket_io.Socket = getSocketForUser(proposal.opponent.id)
 			let socketToReplyTo: socket_io.Socket;
 
 			if ((proposerSocket.id == socket.id) && (opponentSocket.id == socket.id)) {
@@ -122,7 +122,7 @@ io.on('connection', (socket) => {
 
 	socket.on('disconnect', function(){
 
-		userSockets = userSockets.filter(userSocket => (userSocket.socket.id != socket.id))
+		users = users.filter(userSocket => (userSocket.socket.id != socket.id))
 		broadcastUserList();
 
 	});
@@ -133,7 +133,7 @@ function broadcastUserList() {
 	
 	io.emit(
 		SocketChannel.ListWaitingRoomReply,
-		userSockets.map(userSocket => userSocket.user),
+		users.map(user => user),
 	);
 
 }
@@ -171,8 +171,6 @@ function findProposalInList(proposal: Proposal): Proposal {
 
 	}
 
-	
-
 }
 
 function removeProposalFromList(proposal: Proposal) {
@@ -184,53 +182,28 @@ function removeProposalFromList(proposal: Proposal) {
 
 }
 
-function getSocketForUser(user: User): socket_io.Socket {
+function getSocketForUser(userId: string): socket_io.Socket {
 
-	const userSocket = userSockets.filter(userSocket => (userSocket.user.id == user.id))
+	const user = users.filter(users => (users.id == userId))
 
-	if (userSocket.length == 0) {
+	if (user.length == 0) {
 		return null;
 	} else {
-		return userSocket[0].socket;
+		return user[0].socket;
 	}
 
 }
 
 function startGame(proposal: Proposal) {
 
-	const game: Game = {
-		
-		players: [proposal.proposer, proposal.opponent],
-		pieceSet: createDefaultDraw(),
-		gameBoard: [],
+	const game = new Game([proposal.proposer, proposal.opponent])
 
-	}
+	games.push(game)
 
-	console.log(game)
-	gamesInProgress.push(game)
-
+	//console.log(game)
 
 }
 
-function createDefaultDraw(): PieceSet {
-
-	let pieceSet: PieceSet = []
-	
-	for (let i = 0; i < DEFAULT_DRAW.length; i++) {
-
-		for (let j = 0; j < DEFAULT_DRAW[i]; j++) {
-
-			let piece: Piece = {value: i}
-			pieceSet.push(piece)
-		
-		}
-		
-	}
-
-	return pieceSet
-
-}
- 
 
 httpServer.listen(3000, function(){
 
