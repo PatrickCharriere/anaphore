@@ -13,7 +13,7 @@ export class Draw {
 
 function createDefaultDraw(): Piece[] {
 
-	let pieceSet: Piece[]
+	let pieceSet: Piece[] = []
 	
 	for (let i = 0; i < DEFAULT_DRAW.length; i++) {
 

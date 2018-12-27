@@ -182,8 +182,6 @@ function startGame(proposal: Proposal) {
 
 	games.push(game)
 
-	//console.log(game)
-
 }
 
 
