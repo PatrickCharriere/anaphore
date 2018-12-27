@@ -53,7 +53,13 @@ export class User {
             id: this._id,
             name: this._name,
         }
-        
+
+    }
+
+    public setStatus(status: UserStatus) {
+
+        this._status = status
+
     }
 
 }
