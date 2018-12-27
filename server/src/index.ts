@@ -1,39 +1,38 @@
 
-import { User, UserStatus } from './User';
+import { User } from './User';
 import * as express from 'express';
 import * as http from 'http';
 import * as socket_io from 'socket.io';
 import { SocketChannel } from './SocketChannel';
 import { Proposal, ProposalResponse } from './Proposal';
 import { Game } from './Game';
+import { UserList } from './UserList';
 
 const app = express()
 const httpServer = new http.Server(app as any)
-const io = socket_io(httpServer)
+export const io = socket_io(httpServer)
 
-let users: User[] = [];
+let users: UserList = new UserList()
 let proposals: Proposal[] = [];
 let games: Game[] = [];
 
 io.on('connection', (socket) => {
 
 	socket.on(SocketChannel.CreatePlayer, (content) => {
-
+		
 		try {
 
 			const player = JSON.parse(content)
 			const user = new User(player.name, socket)
 
-			users.push(user);
+			users.add(user)
 
 			socket.emit(
 		
 				SocketChannel.PlayerCreated,
-				user,
+				user.formattedUser,
 				
 			);
-
-			broadcastUserList();
 
 		} catch(error) {
 
@@ -46,9 +45,7 @@ io.on('connection', (socket) => {
 		socket.emit(
 			SocketChannel.ListWaitingRoomReply,
 			users
-			.filter(user => {
-				return (user.status == UserStatus.Waiting)
-			})
+			.getWaitingUsers()
 		);
 
 	});
@@ -61,7 +58,7 @@ io.on('connection', (socket) => {
 		} catch(e) {}
 
 		try {
-			(users.filter(userSocket => (userSocket.id == proposal.opponent.id))[0])
+			(users.find(proposal.opponent.id))
 			.socket
 			.emit(
 			
@@ -122,21 +119,12 @@ io.on('connection', (socket) => {
 
 	socket.on('disconnect', function(){
 
-		users = users.filter(userSocket => (userSocket.socket.id != socket.id))
-		broadcastUserList();
+		users.removeBySocket(socket.id)
 
 	});
 
 });
 
-function broadcastUserList() {
-	
-	io.emit(
-		SocketChannel.ListWaitingRoomReply,
-		users.map(user => user),
-	);
-
-}
 
 function addToProposalList(proposal: Proposal): boolean {
 
@@ -184,13 +172,7 @@ function removeProposalFromList(proposal: Proposal) {
 
 function getSocketForUser(userId: string): socket_io.Socket {
 
-	const user = users.filter(users => (users.id == userId))
-
-	if (user.length == 0) {
-		return null;
-	} else {
-		return user[0].socket;
-	}
+	return users.find(userId).socket;
 
 }
 

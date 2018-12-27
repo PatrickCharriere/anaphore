@@ -9,6 +9,10 @@ export enum UserStatus {
 
 export type UserList = User[];
 
+export interface FormattedUser {
+    id: string,
+    name: string,
+}
 
 export class User {
     private _id: string
@@ -31,6 +35,10 @@ export class User {
         return this._id
     }
 
+    public get name() : string {
+        return this._name
+    }
+
     public get socket() : socket_io.Socket {
         return this._socket
     }
@@ -38,7 +46,14 @@ export class User {
     public get status() : UserStatus {
         return this._status
     }
+    
+    public get formattedUser() : FormattedUser {
 
-
+        return {
+            id: this._id,
+            name: this._name,
+        }
+        
+    }
 
 }
