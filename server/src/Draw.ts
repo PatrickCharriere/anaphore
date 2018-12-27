@@ -6,26 +6,26 @@ export class Draw {
     private _pieces: Piece[];
 
     constructor() {
-        this._pieces = createDefaultDraw()
+        this._pieces = this.createDefault()
     }
 
-}
+	createDefault(): Piece[] {
 
-function createDefaultDraw(): Piece[] {
-
-	let pieceSet: Piece[] = []
+		let pieceSet: Piece[] = []
+		
+		for (let i = 0; i < DEFAULT_DRAW.length; i++) {
 	
-	for (let i = 0; i < DEFAULT_DRAW.length; i++) {
-
-		for (let j = 0; j < DEFAULT_DRAW[i]; j++) {
-
-			let piece: Piece = {value: i}
-			pieceSet.push(piece)
-		
+			for (let j = 0; j < DEFAULT_DRAW[i]; j++) {
+	
+				let piece: Piece = {value: i}
+				pieceSet.push(piece)
+			
+			}
+			
 		}
-		
+	
+		return pieceSet
+	
 	}
-
-	return pieceSet
-
+	
 }

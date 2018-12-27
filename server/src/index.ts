@@ -178,10 +178,15 @@ function getSocketForUser(userId: string): socket_io.Socket {
 
 function startGame(proposal: Proposal) {
 
-	const game = new Game([proposal.proposer, proposal.opponent])
+	const game = new Game([
+		users.find(proposal.proposer.id),
+		users.find(proposal.opponent.id)
+	])
+
+	game.start()
 
 	games.push(game)
-
+	
 }
 
 
