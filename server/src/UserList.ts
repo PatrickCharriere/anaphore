@@ -28,7 +28,17 @@ export class UserList {
     
     find(userId: string): User {
 
-        return this._users.filter(user => (user.id == userId))[0]
+        const users: User[] = this._users.filter(user => (user.id == userId))
+
+        if (users.length > 0) {
+
+            return users[0]
+
+        } else {
+
+            throw Error
+            
+        }
 
     }
 

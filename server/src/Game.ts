@@ -42,6 +42,7 @@ export class Game {
         this._currentPlayer = this.randomUser()
 
         // Give first pieces to users
+        console.log("3 pieces", this._draw.takeRandom(3))
 
     }
 

@@ -81,8 +81,22 @@ io.on('connection', (socket) => {
 		const proposal = findProposalInList(proposalResponse.proposal)
 
 		if (proposal) {
-			const proposerSocket: socket_io.Socket = getSocketForUser(proposal.proposer.id)
-			const opponentSocket: socket_io.Socket = getSocketForUser(proposal.opponent.id)
+
+			let proposerSocket: socket_io.Socket
+			let opponentSocket: socket_io.Socket
+
+			try {
+
+				proposerSocket = getSocketForUser(proposal.proposer.id)
+				opponentSocket = getSocketForUser(proposal.opponent.id)
+
+			} catch (error) {
+
+				// proposer or opponent not found
+				return
+
+			}
+
 			let socketToReplyTo: socket_io.Socket;
 
 			if ((proposerSocket.id == socket.id) && (opponentSocket.id == socket.id)) {
@@ -172,7 +186,20 @@ function removeProposalFromList(proposal: Proposal) {
 
 function getSocketForUser(userId: string): socket_io.Socket {
 
-	return users.find(userId).socket;
+	let user: User;
+
+	try {
+
+		user = users.find(userId)
+
+	}
+	catch(error) {
+
+		throw error
+
+	}
+
+	return user.socket;
 
 }
 

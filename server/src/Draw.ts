@@ -28,4 +28,20 @@ export class Draw {
 	
 	}
 	
+	takeRandom(quantity: number): Piece[] {
+
+		let randomPieces: Piece[] = [];
+		const adjustedQuantity = (quantity > this._pieces.length) ? this._pieces.length : quantity
+
+		for (let i = 0; i < adjustedQuantity; i++) {
+			
+			const randomPieceIndex = Math.floor(Math.random() * Math.floor(this._pieces.length))
+			randomPieces.push(this._pieces.splice(randomPieceIndex, 1)[0])
+
+		}
+		
+		return randomPieces
+
+	}
+
 }

@@ -1,6 +1,7 @@
 
 import * as socket_io from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
+import { Piece } from './Piece';
 
 export enum UserStatus {
     Waiting = 'Waiting',
@@ -20,6 +21,7 @@ export class User {
     private _status: UserStatus
     private _currentScore: number
     private _socket: socket_io.Socket
+    private _hands: Piece[][]
 
     constructor(name: string, socket: socket_io.Socket) {
         this._id = uuidv4()
