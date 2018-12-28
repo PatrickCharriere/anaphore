@@ -1,12 +1,16 @@
 import { User, UserStatus } from "./User";
 import { io } from './index';
 import { SocketChannel } from './SocketChannel';
+import * as socket_io from 'socket.io';
+import { Piece } from './Piece';
 
 export class UserList {
 
     private _users: User[] = [];
 
-    constructor() {
+    constructor(userList?: User[]) {
+
+        this._users = userList || []
 
     }
 
@@ -16,6 +20,12 @@ export class UserList {
 
         this.broadcastUserList()
     
+    }
+
+    get length(): number {
+
+        return this._users.length
+        
     }
 
     removeBySocket(socketId: string) {
@@ -37,7 +47,7 @@ export class UserList {
         } else {
 
             throw Error
-            
+
         }
 
     }
@@ -58,6 +68,35 @@ export class UserList {
         })
         .map(user => (user.formattedUser || []))
 
+    }
+
+    getSocketForUser(userId: string): socket_io.Socket {
+
+        let user: User;
+    
+        try {
+    
+            user = this.find(userId)
+    
+        }
+        catch(error) {
+    
+            throw error
+    
+        }
+    
+        return user.socket;
+    
+    }
+    
+    setPieces(gameId: string, pieces: Piece[][]) {
+
+        for (let i = 0; i < pieces.length; i++) {
+            
+            // TODO: Check that _users length is the same as pieces length
+            this._users[i].setHand(gameId, pieces[i])
+            
+        }
     }
 
 }

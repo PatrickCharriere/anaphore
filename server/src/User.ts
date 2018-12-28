@@ -2,6 +2,9 @@
 import * as socket_io from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { Piece } from './Piece';
+import { UserGameList } from './UserGameList';
+
+export const MAX_USER_HAND = 3
 
 export enum UserStatus {
     Waiting = 'Waiting',
@@ -16,20 +19,19 @@ export interface FormattedUser {
 }
 
 export class User {
+    
     private _id: string
     private _name: string
     private _status: UserStatus
-    private _currentScore: number
     private _socket: socket_io.Socket
-    private _hands: Piece[][]
+    private _userGames: UserGameList
 
     constructor(name: string, socket: socket_io.Socket) {
+        
         this._id = uuidv4()
         this._name = name
         this._status = UserStatus.Waiting
-        this._currentScore = 0
         this._socket = socket
-
 
     }
 
@@ -61,6 +63,15 @@ export class User {
     public setStatus(status: UserStatus) {
 
         this._status = status
+
+    }
+
+    public setHand(gameId: string, pieces: Piece[]): void {
+
+        // Incorrect hand
+        if (pieces.length > MAX_USER_HAND) return
+
+        this._userGames.find(gameId).setHand(pieces);
 
     }
 

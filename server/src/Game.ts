@@ -1,5 +1,8 @@
-import { User, UserStatus } from './User';
+import { User, UserStatus, MAX_USER_HAND } from './User';
 import { Draw } from './Draw';
+import { UserList } from './UserList';
+import { Piece } from './Piece';
+import { v4 as uuidv4 } from 'uuid';
 
 export const GAMEBOARD_HEIGHT = 15
 export const GAMEBOARD_WIDTH = 15
@@ -10,15 +13,18 @@ enum GameState {
 }
 
 export class Game {
-    private _players: User[];
-    private _draw: Draw;
-    private _board: [];
-    private _currentPlayer: User;
-    private _gameState: GameState;
 
-    constructor(players: User[]) {
+    private _id: string
+    private _users: UserList
+    private _draw: Draw
+    private _board: []
+    private _currentUser: User
+    private _gameState: GameState
 
-        this._players = players
+    constructor(users: UserList) {
+
+        this._id = uuidv4()
+        this._users = users
         this._draw = new Draw()
         this._board = []
         this._gameState = GameState.Paused
@@ -27,30 +33,51 @@ export class Game {
 
     start() {
 
-        // Update players statuses
-        for (let i = 0; i < this._players.length; i++) {
-            
-            const player = this._players[i]
-            player.setStatus(UserStatus.Playing)
-            
-        }
-
         // Update game state
         this._gameState = GameState.InProgress
 
+        // Update users statuses
+        for (let i = 0; i < this._users.length; i++) {
+            
+            this._users[i].setStatus(UserStatus.Playing)
+            
+        }
+        
         // Select first user to play
-        this._currentPlayer = this.randomUser()
+        this.setCurrentUser(this.randomUser())
 
         // Give first pieces to users
-        console.log("3 pieces", this._draw.takeRandom(3))
+        this._users.setPieces(this._id, [
+            this.getPiecesFromDraw(MAX_USER_HAND),
+            this.getPiecesFromDraw(MAX_USER_HAND)
+        ])
 
     }
 
-    randomUser(): User {
+    public setCurrentUser(user: User) {
 
-        const randomUserIndex = Math.floor(Math.random() * Math.floor(this._players.length))
+        // Set current user value
+        this._currentUser = user
 
-        return this._players[randomUserIndex]
+        // TODO: Send notification to listeners
+
+    }
+
+    public getPiecesFromDraw(quantity: number): Piece[] {
+
+        //TODO: check that user is allowed to get pieces
+
+        quantity = (quantity > MAX_USER_HAND) ? MAX_USER_HAND : quantity
+
+        return this._draw.takeRandom(quantity)
+
+    }
+
+    private randomUser(): User {
+
+        const randomUserIndex = Math.floor(Math.random() * Math.floor(this._users.length))
+
+        return this._users[randomUserIndex]
 
     }
 

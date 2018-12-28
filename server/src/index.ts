@@ -205,10 +205,12 @@ function getSocketForUser(userId: string): socket_io.Socket {
 
 function startGame(proposal: Proposal) {
 
-	const game = new Game([
-		users.find(proposal.proposer.id),
-		users.find(proposal.opponent.id)
+	const userList: UserList = new UserList([
+		proposal.proposer,
+		proposal.opponent,
 	])
+	
+	const game = new Game(userList)
 
 	game.start()
 
