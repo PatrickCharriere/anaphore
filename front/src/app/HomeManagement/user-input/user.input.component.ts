@@ -21,7 +21,9 @@ export class UserInputComponent {
     private user: UserService) {}
 
   ngOnInit() {
-    this.communicationSocket = this.websocket.connect();
+
+    this.communicationSocket = this.websocket.connect()
+    
   }
 
   sendMessage() {
@@ -37,11 +39,11 @@ export class UserInputComponent {
 
     this.subscriber = this.websocket.playerCreation().subscribe((user) => {
      
-      this.subscriber.unsubscribe();
+      this.subscriber.unsubscribe()
     
-      this.user.set(user);
+      this.user.set(user)
 
-      this.nameSubmitted.emit(true);
+      this.nameSubmitted.emit(true)
     
     });
   
@@ -49,7 +51,7 @@ export class UserInputComponent {
 
   ngOnDestroy() {
 
-    this.subscriber.unsubscribe();
+    if (this.subscriber) this.subscriber.unsubscribe()
 
   }
 

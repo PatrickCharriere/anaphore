@@ -107,4 +107,14 @@ export class UserList {
 
     }
 
+    setStatuses(userStatus: UserStatus) {
+
+        for (let i = 0; i < this._users.length; i++) {
+            
+            this._users[i].status = userStatus
+            
+        }
+
+    }
+
 }

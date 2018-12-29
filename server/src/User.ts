@@ -63,7 +63,7 @@ export class User {
 
     }
 
-    public setStatus(status: UserStatus) {
+    public set status(status: UserStatus) {
 
         this._status = status
         this.publishUserStateUpdate()

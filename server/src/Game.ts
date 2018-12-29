@@ -38,11 +38,7 @@ export class Game {
         this._gameState = GameState.InProgress
 
         // Update users statuses
-        for (let i = 0; i < this._users.length; i++) {
-            
-            this._users[i].setStatus(UserStatus.Playing)
-            
-        }
+        this._users.setStatuses(UserStatus.Playing)
         
         // Select first user to play
         this.resetCurrentUsers()
