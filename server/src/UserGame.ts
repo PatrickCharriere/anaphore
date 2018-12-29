@@ -7,6 +7,7 @@ export class UserGame {
     private _score: number = 0
     private _scoreLog: number[] = []
     private _hand: Piece[] = []
+    private _isCurrentPlayer: boolean = false
 
     constructor(gameId: string, hand?: Piece[]) {
 
@@ -33,4 +34,17 @@ export class UserGame {
         return this._gameId
 
     }
+
+    public setCurrentPlayer() {
+
+        this._isCurrentPlayer = true
+
+    }
+
+    public unsetCurrentPlayer() {
+
+        this._isCurrentPlayer = false
+        
+    }
+
 }

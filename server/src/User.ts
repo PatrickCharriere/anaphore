@@ -3,6 +3,7 @@ import * as socket_io from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { Piece } from './Piece';
 import { UserGameList } from './UserGameList';
+import { SocketChannel } from './SocketChannel';
 
 export const MAX_USER_HAND = 3
 
@@ -16,10 +17,11 @@ export type UserList = User[];
 export interface FormattedUser {
     id: string,
     name: string,
+    userGames: UserGameList
 }
 
 export class User {
-    
+
     private _id: string
     private _name: string
     private _status: UserStatus
@@ -56,6 +58,7 @@ export class User {
         return {
             id: this._id,
             name: this._name,
+            userGames: this._userGames
         }
 
     }
@@ -63,6 +66,7 @@ export class User {
     public setStatus(status: UserStatus) {
 
         this._status = status
+        this.publishUserStateUpdate()
 
     }
 
@@ -73,6 +77,33 @@ export class User {
 
         this._userGames.find(gameId).setHand(pieces);
 
+        this.publishUserStateUpdate()
+
+    }
+
+    public setCurrent(gameId: string) {
+
+        this._userGames.find(gameId).setCurrentPlayer()
+
+        this.publishUserStateUpdate()
+
+    }
+
+    public unsetCurrent(gameId: string) {
+
+        this._userGames.find(gameId).unsetCurrentPlayer()
+
+        this.publishUserStateUpdate()
+
+    }
+
+    public publishUserStateUpdate() {
+
+        this._socket.emit(
+            SocketChannel.PlayerStatus,
+            this.formattedUser
+        )
+        
     }
 
 }

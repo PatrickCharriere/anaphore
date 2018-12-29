@@ -8,4 +8,5 @@ export enum SocketChannel {
     GameProposed = "GameProposed",
     GameProposalResponse = "GameProposalResponse",
     StartGame = "StartGame",
+    PlayerStatus = "PlayerStatus",
 }

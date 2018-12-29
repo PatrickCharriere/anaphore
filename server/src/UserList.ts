@@ -99,4 +99,12 @@ export class UserList {
         }
     }
 
+    unsetCurrentUsers(gameId: string) {
+
+        for (const user of this._users) {
+            user.unsetCurrent(gameId)
+        }
+
+    }
+
 }
