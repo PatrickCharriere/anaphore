@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { WebsocketService } from '../../SharedKernel/WebsocketManagement/websocket.service';
-import { User } from '../../SharedKernel/user'
+import { User } from '../../SharedKernel/User'
 import { UserService } from 'src/app/SharedKernel/user.service';
 
 @Component({

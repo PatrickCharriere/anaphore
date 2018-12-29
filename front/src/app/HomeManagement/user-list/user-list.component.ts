@@ -1,10 +1,10 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { UserList } from '../../SharedKernel/user';
-import { WebsocketService } from 'src/app/SharedKernel/WebsocketManagement/websocket.service';
-import { SocketChannel } from 'src/app/SharedKernel/WebsocketManagement/SocketChannel';
-import { UserService } from 'src/app/SharedKernel/user.service';
-import { User } from 'src/app/SharedKernel/users';
-import { Proposal } from 'src/app/SharedKernel/proposal';
+import { UserList } from '../../SharedKernel/Users';
+import { WebsocketService } from '../../SharedKernel/WebsocketManagement/websocket.service';
+import { SocketChannel } from '../../SharedKernel/WebsocketManagement/SocketChannel';
+import { UserService } from '../../SharedKernel/user.service';
+import { User } from '../../SharedKernel/User';
+import { Proposal } from '../../SharedKernel/proposal';
 
 @Component({
   selector: 'app-user-list',
@@ -22,13 +22,13 @@ export class UserListComponent implements OnInit {
   @Output() startGame = new EventEmitter<void>();
 
   constructor(private websocket: WebsocketService,
-    private user: UserService) {}
+    private userService: UserService) {}
 
   ngOnInit() {
     
     this.communicationSocket = this.websocket.connect();
 
-    this.user.get().subscribe(user => {
+    this.userService.get().subscribe(user => {
       
       this._user = user
 

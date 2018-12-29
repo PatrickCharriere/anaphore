@@ -1,4 +1,4 @@
-import { User } from './users';
+import { User } from './User';
 
 export interface Proposal {
     proposer: User,

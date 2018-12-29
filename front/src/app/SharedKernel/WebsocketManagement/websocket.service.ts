@@ -3,8 +3,9 @@ import * as io from 'socket.io-client';
 import { Observable, Subscriber } from 'rxjs';
 import * as Rx from 'rxjs';
 import { SocketChannel } from './SocketChannel';
-import { UserList, User } from '../users';
+import { UserList } from '../Users';
 import { Proposal, ProposalResponse } from '../proposal';
+import { User } from '../User';
 //import { environment } from '../environments/environment';
 
 @Injectable()
@@ -31,6 +32,10 @@ export class WebsocketService {
 
   opponentResponse(): Observable<ProposalResponse> {
     return this.createInputChannel(SocketChannel.GameProposalResponse);
+  }
+
+  playerStatus(): Observable<User> {
+    return this.createInputChannel(SocketChannel.PlayerStatus);
   }
   
   private createInputChannel<T>(channel: SocketChannel): Observable<T> {

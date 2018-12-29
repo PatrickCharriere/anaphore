@@ -17,7 +17,7 @@ export type UserList = User[];
 export interface FormattedUser {
     id: string,
     name: string,
-    userGames: UserGameList
+    userGames: UserGameList,
 }
 
 export class User {
@@ -89,9 +89,9 @@ export class User {
 
     }
 
-    public unsetCurrent(gameId: string) {
+    public unsetCurrent = (gameId: string) => {
 
-        this._userGames.find(gameId).unsetCurrentPlayer()
+        //this._userGames.find(gameId).unsetCurrentPlayer()
 
         this.publishUserStateUpdate()
 

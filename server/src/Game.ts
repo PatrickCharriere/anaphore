@@ -3,7 +3,6 @@ import { Draw } from './Draw';
 import { UserList } from './UserList';
 import { Piece } from './Piece';
 import { v4 as uuidv4 } from 'uuid';
-import { SocketChannel } from './SocketChannel';
 
 export const GAMEBOARD_HEIGHT = 15
 export const GAMEBOARD_WIDTH = 15

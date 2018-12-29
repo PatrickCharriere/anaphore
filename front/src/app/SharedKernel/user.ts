@@ -1,7 +1,9 @@
+import { UserGameList } from './UserGameList';
+
 export interface User {
     id: string,
     name: string,
-    currentScore: number,
+    userGames: UserGameList,
 }
 
 export type UserList = User[];

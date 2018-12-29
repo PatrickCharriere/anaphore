@@ -14,7 +14,7 @@ export class UserList {
 
     }
 
-    add(user: User) {
+    public add(user: User) {
 
         this._users.push(user)
 
@@ -28,7 +28,7 @@ export class UserList {
         
     }
 
-    removeBySocket(socketId: string) {
+    public removeBySocket(socketId: string) {
 
         this._users = this._users.filter(userSocket => (userSocket.socket.id != socketId))
         
@@ -36,7 +36,7 @@ export class UserList {
 
     }
     
-    find(userId: string): User {
+    public find(userId: string): User {
 
         const users: User[] = this._users.filter(user => (user.id == userId))
 
@@ -52,7 +52,7 @@ export class UserList {
 
     }
 
-    broadcastUserList() {
+    public broadcastUserList() {
         
         io.emit(
             SocketChannel.ListWaitingRoomReply,
@@ -61,7 +61,7 @@ export class UserList {
     
     }
 
-    getWaitingUsers() {
+    public getWaitingUsers() {
 
         return this._users.filter(user => {
             return (user.status == UserStatus.Waiting)
@@ -70,7 +70,7 @@ export class UserList {
 
     }
 
-    getSocketForUser(userId: string): socket_io.Socket {
+    public getSocketForUser(userId: string): socket_io.Socket {
 
         let user: User;
     
@@ -89,7 +89,7 @@ export class UserList {
     
     }
     
-    setPieces(gameId: string, pieces: Piece[][]) {
+    public setPieces(gameId: string, pieces: Piece[][]) {
 
         for (let i = 0; i < pieces.length; i++) {
             
@@ -99,15 +99,22 @@ export class UserList {
         }
     }
 
-    unsetCurrentUsers(gameId: string) {
+    public unsetCurrentUsers(gameId: string) {
 
-        for (const user of this._users) {
+        this._users.map(user => {
+            console.log(user)
             user.unsetCurrent(gameId)
-        }
+        })
+        /*for (const user of this._users) {
+
+            console.log(user)
+            user.unsetCurrent(gameId)
+
+        }*/
 
     }
 
-    setStatuses(userStatus: UserStatus) {
+    public setStatuses(userStatus: UserStatus) {
 
         for (let i = 0; i < this._users.length; i++) {
             
