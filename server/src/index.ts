@@ -7,6 +7,8 @@ import { SocketChannel } from './SocketChannel';
 import { Proposal, ProposalResponse } from './Proposal';
 import { Game } from './Game';
 import { UserList } from './UserList';
+import { Validator } from './Validator';
+import { Player } from './Player';
 
 const app = express()
 const httpServer = new http.Server(app as any)
@@ -18,17 +20,17 @@ let games: Game[] = [];
 
 io.on('connection', (socket) => {
 
-	socket.on(SocketChannel.CreatePlayer, (content) => {
+	socket.on(SocketChannel.CreatePlayer, (message: any) => {
 		
 		try {
 
-			const player = JSON.parse(content)
+			const player: Player = Validator.checkAndCreatePlayer(message)
 			const user = new User(player.name, socket)
 
 			users.add(user)
 
 			socket.emit(
-		
+				
 				SocketChannel.PlayerCreated,
 				user.formattedUser,
 				
@@ -50,12 +52,18 @@ io.on('connection', (socket) => {
 
 	});
 
-	socket.on(SocketChannel.ProposeGame, (proposal) => {
+	socket.on(SocketChannel.ProposeGame, (message: any) => {
+
+		let proposal: Proposal
 
 		try {
-			proposal = JSON.parse(proposal) as Proposal;
+
+			proposal = Validator.checkAndCreateProposal(message)
 			addToProposalList(proposal);
-		} catch(e) {}
+
+		} catch(e) {
+
+		}
 
 		try {
 			(users.find(proposal.opponent.id))
@@ -66,17 +74,23 @@ io.on('connection', (socket) => {
 				proposal,
 				
 			);
-		} catch(e) {}
+		} catch(e) {
+
+		}
 
 	});
 
-	socket.on(SocketChannel.GameProposalResponse, (proposalResponse) => {
+	socket.on(SocketChannel.GameProposalResponse, (message: any) => {
+
+		let proposalResponse: ProposalResponse
 
 		try {
 
-			proposalResponse = JSON.parse(proposalResponse) as ProposalResponse
+			proposalResponse = Validator.checkAndCreateProposalResponse(message)
 			
-		} catch(e) {}
+		} catch(e) {
+
+		}
 
 		const proposal = findProposalInList(proposalResponse.proposal)
 
@@ -204,7 +218,7 @@ function getSocketForUser(userId: string): socket_io.Socket {
 }
 
 function startGame(proposal: Proposal) {
-
+	
 	const userList: UserList = new UserList([
 		proposal.proposer,
 		proposal.opponent,
