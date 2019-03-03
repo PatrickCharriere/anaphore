@@ -1,8 +1,10 @@
 import { User } from './User';
 
-export interface Proposal {
-    proposer: User,
-    opponent: User,
+export class Proposal {
+    public proposer: User
+    public opponent: User
+
+    
 }
 
 export interface ProposalResponse {

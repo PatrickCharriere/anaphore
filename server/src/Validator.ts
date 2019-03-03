@@ -1,9 +1,10 @@
 import { Player } from "./Player";
 import { Proposal, ProposalResponse } from './Proposal';
+import { UserList } from './UserList';
 
 export class Validator {
 
-    static checkAndCreatePlayer(message): Player {
+    static checkAndCreatePlayer(message: any): Player {
 
         let createdPlayer: Player;
 
@@ -31,7 +32,7 @@ export class Validator {
         
     }
 
-    static checkAndCreateProposal(message): Proposal {
+    static checkAndCreateProposal(message: any, users: UserList): Proposal {
 
         let proposal: Proposal
 
@@ -47,6 +48,8 @@ export class Validator {
             temp.opponent.hasOwnProperty('name')) {
 
                 proposal = temp;
+                proposal.proposer = users.find(proposal.proposer.id)
+                proposal.opponent = users.find(proposal.opponent.id)
 
             } else {
 

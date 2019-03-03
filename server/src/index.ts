@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
 
 		try {
 
-			proposal = Validator.checkAndCreateProposal(message)
+			proposal = Validator.checkAndCreateProposal(message, users)
 			addToProposalList(proposal);
 
 		} catch(e) {
@@ -66,7 +66,8 @@ io.on('connection', (socket) => {
 		}
 
 		try {
-			(users.find(proposal.opponent.id))
+			
+			proposal.opponent
 			.socket
 			.emit(
 			
@@ -74,6 +75,7 @@ io.on('connection', (socket) => {
 				proposal,
 				
 			);
+
 		} catch(e) {
 
 		}
@@ -93,6 +95,7 @@ io.on('connection', (socket) => {
 		}
 
 		const proposal = findProposalInList(proposalResponse.proposal)
+		console.log(proposal)
 
 		if (proposal) {
 

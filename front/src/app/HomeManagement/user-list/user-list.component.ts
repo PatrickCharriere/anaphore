@@ -49,7 +49,7 @@ export class UserListComponent implements OnInit {
 
   subscribeToGameProposals() {
 
-    this.gameProposalSubscription = this.websocket.gameProposal().subscribe((proposal) => {
+    this.gameProposalSubscription = this.websocket.gameProposal().subscribe((proposal: Proposal) => {
       
       this.gameProposalSubscription.unsubscribe()
       let accepted: boolean = false;
