@@ -185,25 +185,6 @@ function removeProposalFromList(proposal: Proposal) {
 
 }
 
-function getSocketForUser(userId: string): socket_io.Socket {
-
-	let user: User;
-
-	try {
-
-		user = users.find(userId)
-
-	}
-	catch(error) {
-
-		throw error
-
-	}
-
-	return user.socket;
-
-}
-
 function startGame(proposal: Proposal) {
 	
 	const userList: UserList = new UserList([
