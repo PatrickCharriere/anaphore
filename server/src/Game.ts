@@ -18,7 +18,7 @@ export class Game {
     private _users: UserList
     private _draw: Draw
     private _board: []
-    private _currentUser: User
+    private _currentUserId: string
     private _gameState: GameState
 
     constructor(users: UserList) {
@@ -41,7 +41,7 @@ export class Game {
         
         // Select first user to play
         this.resetCurrentUsers()
-        this.setCurrentUser(this.randomUser())
+        this.setCurrentUser(this._users.getRandomUserInList())
 
         // Give first pieces to users
         this._users.setPieces(this._id, [
@@ -54,10 +54,7 @@ export class Game {
     public setCurrentUser(user: User) {
 
         // Set current user value
-        this._currentUser = user
-
-        // TODO: Send notification to listeners
-        this._currentUser.setCurrent(this._id)
+        this._currentUserId = user.id
 
     }
 
@@ -74,14 +71,6 @@ export class Game {
         quantity = (quantity > MAX_USER_HAND) ? MAX_USER_HAND : quantity
 
         return this._draw.takeRandom(quantity)
-
-    }
-
-    private randomUser(): User {
-
-        const randomUserIndex = Math.floor(Math.random() * Math.floor(this._users.length))
-
-        return this._users[randomUserIndex]
 
     }
 

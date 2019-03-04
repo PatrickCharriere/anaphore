@@ -102,15 +102,10 @@ export class UserList {
     public unsetCurrentUsers(gameId: string) {
 
         this._users.map(user => {
-            console.log(user)
+
             user.unsetCurrent(gameId)
+
         })
-        /*for (const user of this._users) {
-
-            console.log(user)
-            user.unsetCurrent(gameId)
-
-        }*/
 
     }
 
@@ -121,6 +116,14 @@ export class UserList {
             this._users[i].status = userStatus
             
         }
+
+    }
+
+    public getRandomUserInList(): User {
+
+        const randomUserIndex = Math.floor(Math.random() * Math.floor(this._users.length))
+        
+        return this._users[randomUserIndex]
 
     }
 

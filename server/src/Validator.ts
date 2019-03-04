@@ -47,12 +47,13 @@ export class Validator {
             temp.opponent.hasOwnProperty('id') &&
             temp.opponent.hasOwnProperty('name')) {
 
-                proposal = temp;
-                proposal.proposer = users.find(proposal.proposer.id)
-                proposal.opponent = users.find(proposal.opponent.id)
+                proposal = new Proposal()
+                proposal.proposer = users.find(temp.proposer.id)
+                proposal.opponent = users.find(temp.opponent.id)
 
             } else {
 
+                console.error("Bad structure for proposal")
                 throw "Bad structure for proposal"
 
             }

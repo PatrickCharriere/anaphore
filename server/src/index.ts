@@ -66,13 +66,13 @@ io.on('connection', (socket) => {
 		}
 
 		try {
-			
+
 			proposal.opponent
 			.socket
 			.emit(
 			
 				SocketChannel.GameProposed,
-				proposal,
+				proposal.formatted,
 				
 			);
 
@@ -95,41 +95,25 @@ io.on('connection', (socket) => {
 		}
 
 		const proposal = findProposalInList(proposalResponse.proposal)
-		console.log(proposal)
 
 		if (proposal) {
 
-			let proposerSocket: socket_io.Socket
-			let opponentSocket: socket_io.Socket
-
-			try {
-
-				proposerSocket = getSocketForUser(proposal.proposer.id)
-				opponentSocket = getSocketForUser(proposal.opponent.id)
-
-			} catch (error) {
-
-				// proposer or opponent not found
-				return
-
-			}
-
 			let socketToReplyTo: socket_io.Socket;
 
-			if ((proposerSocket.id == socket.id) && (opponentSocket.id == socket.id)) {
+			if ((proposal.proposer.socket.id == socket.id) && (proposal.opponent.socket.id == socket.id)) {
 
 				// Someone else replied to game proposal
 				return
 
 			}
 
-			if (proposerSocket.id == socket.id) {
+			if (proposal.proposer.socket.id == socket.id) {
 				
-				socketToReplyTo = opponentSocket;
+				socketToReplyTo = proposal.opponent.socket;
 
-			} else if (opponentSocket.id == socket.id) {
+			} else if (proposal.opponent.socket.id == socket.id) {
 				
-				socketToReplyTo = proposerSocket;
+				socketToReplyTo = proposal.proposer.socket;
 
 			}
 

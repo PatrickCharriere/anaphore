@@ -83,7 +83,7 @@ export class User {
 
     public setCurrent(gameId: string) {
 
-        this._userGames.find(gameId).setCurrentPlayer()
+        //this._userGames.find(gameId).setCurrentPlayer()
 
         this.publishUserStateUpdate()
 
