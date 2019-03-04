@@ -3,6 +3,8 @@ import { Draw } from './Draw';
 import { UserList } from './UserList';
 import { Piece } from './Piece';
 import { v4 as uuidv4 } from 'uuid';
+import { Easel } from './Easel';
+import { ScoreSet } from './ScoreSet';
 
 export const GAMEBOARD_HEIGHT = 15
 export const GAMEBOARD_WIDTH = 15
@@ -10,6 +12,7 @@ export const GAMEBOARD_WIDTH = 15
 enum GameState {
     Paused = 'Paused',
     InProgress = 'InProgress',
+    Stopped = 'Stopped',
 }
 
 export class Game {
@@ -20,6 +23,8 @@ export class Game {
     private _board: []
     private _currentUserId: string
     private _gameState: GameState
+    private _easel: Easel
+    private _scores: ScoreSet
 
     constructor(users: UserList) {
 
