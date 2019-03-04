@@ -45,14 +45,10 @@ export class Game {
         this._users.setStatuses(UserStatus.Playing)
         
         // Select first user to play
-        this.resetCurrentUsers()
         this.setCurrentUser(this._users.getRandomUserInList())
 
         // Give first pieces to users
-        this._users.setPieces(this._id, [
-            this.getPiecesFromDraw(MAX_USER_HAND),
-            this.getPiecesFromDraw(MAX_USER_HAND)
-        ])
+        //this.getPiecesFromDraw(MAX_USER_HAND)
 
     }
 
@@ -62,12 +58,6 @@ export class Game {
         this._currentUserId = user.id
 
     }
-
-    private resetCurrentUsers() {
-
-        this._users.unsetCurrentUsers(this._id)
-
-    } 
 
     public getPiecesFromDraw(quantity: number): Piece[] {
 

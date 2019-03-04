@@ -50,8 +50,6 @@ export class UserListComponent implements OnInit {
   subscribeToGameProposals() {
 
     this.gameProposalSubscription = this.websocket.gameProposal().subscribe((proposal: Proposal) => {
-      
-      console.log("proposal received:", proposal)
 
       this.gameProposalSubscription.unsubscribe()
       let accepted: boolean = false;

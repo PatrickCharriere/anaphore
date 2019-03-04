@@ -17,7 +17,6 @@ export type UserList = User[];
 export interface FormattedUser {
     id: string,
     name: string,
-    userGames: UserGameList,
 }
 
 export class User {
@@ -26,7 +25,6 @@ export class User {
     private _name: string
     private _status: UserStatus
     private _socket: socket_io.Socket
-    private _userGames: UserGameList
 
     constructor(name: string, socket: socket_io.Socket) {
         
@@ -58,7 +56,6 @@ export class User {
         return {
             id: this._id,
             name: this._name,
-            userGames: this._userGames
         }
 
     }

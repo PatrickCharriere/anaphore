@@ -2,7 +2,6 @@ import { User, UserStatus } from "./User";
 import { io } from './index';
 import { SocketChannel } from './SocketChannel';
 import * as socket_io from 'socket.io';
-import { Piece } from './Piece';
 
 export class UserList {
 
@@ -87,26 +86,6 @@ export class UserList {
     
         return user.socket;
     
-    }
-    
-    public setPieces(gameId: string, pieces: Piece[][]) {
-
-        for (let i = 0; i < pieces.length; i++) {
-            
-            // TODO: Check that _users length is the same as pieces length
-            this._users[i].setHand(gameId, pieces[i])
-            
-        }
-    }
-
-    public unsetCurrentUsers(gameId: string) {
-
-        this._users.map(user => {
-
-            user.unsetCurrent(gameId)
-
-        })
-
     }
 
     public setStatuses(userStatus: UserStatus) {
