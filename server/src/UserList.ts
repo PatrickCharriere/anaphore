@@ -27,6 +27,12 @@ export class UserList {
         
     }
 
+    get users(): User[] {
+
+        return this._users
+
+    }
+
     public removeBySocket(socketId: string) {
 
         this._users = this._users.filter(userSocket => (userSocket.socket.id != socketId))
