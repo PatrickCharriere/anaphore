@@ -14,6 +14,7 @@ export class Easel {
 
     get pieces(): Piece[] {
 
+        //TODO: check that user is allowed to view the pieces
         return this._pieces
         
     }

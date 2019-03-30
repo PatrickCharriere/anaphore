@@ -6,6 +6,7 @@ import { SocketChannel } from './SocketChannel';
 import { UserList } from '../Users';
 import { Proposal, ProposalResponse } from '../proposal';
 import { User } from '../User';
+import { Easel } from '../Easel';
 //import { environment } from '../environments/environment';
 
 @Injectable()
@@ -36,6 +37,10 @@ export class WebsocketService {
 
   playerStatus(): Observable<User> {
     return this.createInputChannel(SocketChannel.PlayerStatus);
+  }
+
+  easelUpdate(): Observable<Easel> {
+    return this.createInputChannel(SocketChannel.EaselUpdate);
   }
   
   private createInputChannel<T>(channel: SocketChannel): Observable<T> {

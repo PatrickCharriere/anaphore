@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { WebsocketService } from '../../SharedKernel/WebsocketManagement/websocket.service';
 import { User } from '../../SharedKernel/User'
 import { UserService } from 'src/app/SharedKernel/user.service';
+import { PieceSet } from 'src/app/SharedKernel/Piece';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +12,12 @@ import { UserService } from 'src/app/SharedKernel/user.service';
 })
 export class HomeComponent {
   
-  applicationState = "entry";
-  waitingUserList: User[] = [];
-  constructor(){ }
+  private applicationState = "entry";
+  private waitingUserList: User[] = [];
+  public pieces: PieceSet = [];
+  private subscriber;
+
+  constructor(private websocket: WebsocketService){ }
 
   ngOnInit() {}
 
@@ -24,6 +28,14 @@ export class HomeComponent {
   }
 
   goToGame() {
+
+    this.subscriber = this.websocket.easelUpdate().subscribe((easel) => {
+     
+      this.subscriber.unsubscribe()
+    
+      this.pieces = easel["_pieces"]
+    
+    })
 
     this.applicationState = "partyInProgress";
 
@@ -45,6 +57,12 @@ export class HomeComponent {
         break;
 
     }
+
+  }
+
+  ngOnDestroy() {
+
+    if (this.subscriber) this.subscriber.unsubscribe()
 
   }
 
