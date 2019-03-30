@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "anaphore-front": {
+    "trios-front": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/anaphore-front",
+            "outputPath": "dist/trios-front",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -61,18 +61,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "anaphore-front:build"
+            "browserTarget": "trios-front:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "anaphore-front:build:production"
+              "browserTarget": "trios-front:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "anaphore-front:build"
+            "browserTarget": "trios-front:build"
           }
         },
         "test": {
@@ -106,7 +106,7 @@
         }
       }
     },
-    "anaphore-front-e2e": {
+    "trios-front-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -115,11 +115,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "anaphore-front:serve"
+            "devServerTarget": "trios-front:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "anaphore-front:serve:production"
+              "devServerTarget": "trios-front:serve:production"
             }
           }
         },
@@ -135,5 +135,5 @@
       }
     }
   },
-  "defaultProject": "anaphore-front"
+  "defaultProject": "trios-front"
 }

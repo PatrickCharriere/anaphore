@@ -1,6 +1,6 @@
-# Anaphore
+# Trios
 
-Anaphore est un jeu de chiffres dans lequel il faut aligner des jetons sur un plateau et dont la somme de trois jetons doit toujours être égale à 15.
+Trios est un jeu de chiffres dans lequel il faut aligner des jetons sur un plateau et dont la somme de trois jetons doit toujours être égale à 15.
 
 ## Règles
 TBD
@@ -23,6 +23,6 @@ Les fonctionnalités indispensables sont:
 
 ## Technique
 
-Front: Application Angular. Utiliser la commande `npm install -g @angular/cli` puis `ng serve` depuis le dossier `anaphore-front` pour la lancer en local.  
+Front: Application Angular. Utiliser la commande `npm install -g @angular/cli` puis `ng serve` depuis le dossier `trios-front` pour la lancer en local.  
 Server: Application Node. Utiliser la commande `node index.js` depuis le dossier `server` pour le lancer.  
 Database: La base de donnée et créée sous forme de fichier avec le serveur.  
