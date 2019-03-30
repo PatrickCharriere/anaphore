@@ -9,7 +9,7 @@ export class Draw {
         this._pieces = this.createDefault()
     }
 
-	createDefault(): Piece[] {
+	public createDefault(): Piece[] {
 
 		let pieceSet: Piece[] = []
 		
@@ -28,7 +28,7 @@ export class Draw {
 	
 	}
 	
-	takeRandom(quantity: number): Piece[] {
+	public takeRandom(quantity: number): Piece[] {
 
 		let randomPieces: Piece[] = [];
 		const adjustedQuantity = (quantity > this._pieces.length) ? this._pieces.length : quantity
@@ -41,6 +41,12 @@ export class Draw {
 		}
 		
 		return randomPieces
+
+	}
+
+	public getDrawSize(): number {
+
+		return this._pieces.length
 
 	}
 

@@ -5,6 +5,7 @@ import { Piece } from './Piece';
 import { v4 as uuidv4 } from 'uuid';
 import { ScoreSet } from './ScoreSet';
 import { Easel } from './Easel';
+import { SocketChannel } from './SocketChannel';
 
 export const GAMEBOARD_HEIGHT = 15
 export const GAMEBOARD_WIDTH = 15
@@ -50,14 +51,7 @@ export class Game {
 
         // Give first pieces to users
         this._users.users.map(user => {
-            this._easels.push(new Easel(this.getPiecesFromDraw(MAX_USER_HAND), user.id))
-        })
-
-        this._easels.map(easel => {
-            console.log('User:', easel.userId)
-            easel.pieces.map(piece => {
-                console.log('Piece:', piece)
-            })
+            this.createEasel(new Easel(this.getPiecesFromDraw(MAX_USER_HAND), user.id), user)
         })
         
     }
@@ -74,6 +68,19 @@ export class Game {
         quantity = (quantity > MAX_USER_HAND) ? MAX_USER_HAND : quantity
 
         return this._draw.takeRandom(quantity)
+
+    }
+
+    private createEasel(easel: Easel, user: User) {
+
+        this._easels.push(easel)
+
+        user.socket.emit(
+
+            SocketChannel.EaselUpdate,
+            easel,
+
+        )
 
     }
 

@@ -2,7 +2,6 @@
 import * as socket_io from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { Piece } from './Piece';
-import { UserGameList } from './UserGameList';
 import { SocketChannel } from './SocketChannel';
 
 export const MAX_USER_HAND = 3
@@ -72,7 +71,7 @@ export class User {
         // Incorrect hand
         if (pieces.length > MAX_USER_HAND) return
 
-        this._userGames.find(gameId).setHand(pieces);
+        //this._userGames.find(gameId).setHand(pieces);
 
         this.publishUserStateUpdate()
 

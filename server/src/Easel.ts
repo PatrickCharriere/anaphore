@@ -19,9 +19,9 @@ export class Easel {
         
     }
 
-    get userId(): Piece[] {
+    get userId(): string {
 
-        return this._pieces
+        return this._userId
         
     }
 
