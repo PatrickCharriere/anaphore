@@ -3,6 +3,7 @@ import { WebsocketService } from '../../SharedKernel/WebsocketManagement/websock
 import { User } from '../../SharedKernel/User'
 import { UserService } from 'src/app/SharedKernel/user.service';
 import { PieceSet } from 'src/app/SharedKernel/Piece';
+import { Easel } from 'src/app/SharedKernel/Easel';
 
 @Component({
   selector: 'app-root',
@@ -29,11 +30,13 @@ export class HomeComponent {
 
   goToGame() {
 
-    this.subscriber = this.websocket.easelUpdate().subscribe((easel) => {
+    this.subscriber = this.websocket.easelUpdate().subscribe((easelStruct) => {
      
       this.subscriber.unsubscribe()
     
-      this.pieces = easel["_pieces"]
+      const easelObject: Easel = new Easel(easelStruct._pieces, easelStruct._userId)
+
+      this.pieces = easelObject.pieces
     
     })
 

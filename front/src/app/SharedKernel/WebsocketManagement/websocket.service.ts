@@ -6,7 +6,7 @@ import { SocketChannel } from './SocketChannel';
 import { UserList } from '../Users';
 import { Proposal, ProposalResponse } from '../proposal';
 import { User } from '../User';
-import { Easel } from '../Easel';
+import { EaselStruct } from '../Easel';
 //import { environment } from '../environments/environment';
 
 @Injectable()
@@ -39,7 +39,7 @@ export class WebsocketService {
     return this.createInputChannel(SocketChannel.PlayerStatus);
   }
 
-  easelUpdate(): Observable<Easel> {
+  easelUpdate(): Observable<EaselStruct> {
     return this.createInputChannel(SocketChannel.EaselUpdate);
   }
   
@@ -56,7 +56,7 @@ export class WebsocketService {
     return observable;
 
   }
-  
+
   connect(): Rx.Subject<MessageEvent> {
     
     // Data emitter to server

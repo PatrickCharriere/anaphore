@@ -1,5 +1,7 @@
 import { Piece } from './Piece';
 
+export interface EaselStruct { _pieces: Piece[], _userId: string }
+
 export class Easel {
 
     private _pieces: Piece[]
